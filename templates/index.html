@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Carousel -->
+<div id="carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{{ url_for('static', filename='welcome.jpg') }}" class="d-block w-100" alt="Welcome">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='inform.jpg') }}" class="d-block w-100" alt="Inform">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='persuasif.jpg') }}" class="d-block w-100" alt="Persuasif">
+    </div>
+  </div>
+</div>
+
+<br><br>
+
+<!-- Kategori Rental -->
+<div class="container text-center">
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 align-items-center">
+    <div class="col">
+      <a href="{{ url_for('menu', category='Audio') }}" class="text-decoration-none">
+        <img src="{{ url_for('static', filename='audio.png') }}" class="category-img rounded mx-auto d-block" alt="Audio">
+        <h6 class="mt-2">Audio</h6>
+      </a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('menu', category='Camera') }}" class="text-decoration-none">
+        <img src="{{ url_for('static', filename='camera.png') }}" class="category-img rounded mx-auto d-block" alt="Camera">
+        <h6 class="mt-2">Camera</h6>
+      </a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('menu', category='Drone') }}" class="text-decoration-none">
+        <img src="{{ url_for('static', filename='drone.png') }}" class="category-img rounded mx-auto d-block" alt="Drone">
+        <h6 class="mt-2">Drone</h6>
+      </a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('menu', category='iPhone') }}" class="text-decoration-none">
+        <img src="{{ url_for('static', filename='iphone.png') }}" class="category-img rounded mx-auto d-block" alt="iPhone">
+        <h6 class="mt-2">iPhone</h6>
+      </a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('menu', category='Lensa') }}" class="text-decoration-none">
+        <img src="{{ url_for('static', filename='lensa.png') }}" class="category-img rounded mx-auto d-block" alt="Lensa">
+        <h6 class="mt-2">Lensa</h6>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Kritik dan Saran -->
+{% if is_admin %}
+<div class="container mt-4">
+    <h4>Kritik dan Saran</h4>
+    <div class="row">
+        {% for krisar in krisar_list %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ krisar.username }}</h5>
+                    <p class="card-text">{{ krisar.message }}</p>
+                    <p class="text-muted">{{ krisar.contact }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

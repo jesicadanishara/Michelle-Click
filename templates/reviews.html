@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Customer Reviews</h2>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Form Input Review -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg mb-4">
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-3">Tulis Review Anda</h4>
+                    <form method="POST" action="{{ url_for('reviews') }}">
+                        <div class="mb-3">
+                            <label for="contact" class="form-label fw-bold">Kontak (Email / No. HP)</label>
+                            <input type="text" class="form-control" id="contact" name="contact"
+                                placeholder="Masukkan email atau nomor HP" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="review_text" class="form-label fw-bold">Review Anda</label>
+                            <textarea class="form-control" id="review_text" name="review_text" rows="3"
+                                placeholder="Tulis ulasan Anda di sini..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Rating</label>
+                            <div>
+                                <input type="hidden" name="rating" id="rating-value">
+                                <i class="bi bi-star star-icon" data-value="1"></i>
+                                <i class="bi bi-star star-icon" data-value="2"></i>
+                                <i class="bi bi-star star-icon" data-value="3"></i>
+                                <i class="bi bi-star star-icon" data-value="4"></i>
+                                <i class="bi bi-star star-icon" data-value="5"></i>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-send"></i> Kirim Review
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menampilkan Semua Review -->
+    <div class="row">
+        {% if reviews %}
+            {% for review in reviews %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm review-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ review['username'] }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ review['contact'] }}</h6>
+                        <p class="card-text">{{ review['review_text'] }}</p>
+                        <p>
+                            {% for i in range(review['rating']) %}
+                                <i class="bi bi-star-fill text-warning"></i>
+                            {% endfor %}
+                            {% for i in range(5 - review['rating']) %}
+                                <i class="bi bi-star text-secondary"></i>
+                            {% endfor %}
+                        </p>
+                        {% if review['date'] %}
+                            <small class="text-muted">Dikirim pada {{ review['date'] }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-muted">Belum ada review.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+<style>
+    .star-icon {
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: gray;
+    }
+    .star-icon:hover, .star-icon.active {
+        color: gold;
+    }
+    .review-card:hover {
+        transform: scale(1.05);
+        transition: 0.3s;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const stars = document.querySelectorAll(".star-icon");
+        const ratingValue = document.getElementById("rating-value");
+
+        stars.forEach(star => {
+            star.addEventListener("mouseover", function() {
+                let value = this.getAttribute("data-value");
+                stars.forEach(s => s.classList.remove("active"));
+                for (let i = 0; i < value; i++) {
+                    stars[i].classList.add("active");
+                }
+            });
+
+            star.addEventListener("click", function() {
+                let value = this.getAttribute("data-value");
+                ratingValue.value = value;
+            });
+        });
+    });
+</script>
+
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+{% endblock %}
